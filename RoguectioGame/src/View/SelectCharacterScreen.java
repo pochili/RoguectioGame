@@ -19,9 +19,9 @@ public class SelectCharacterScreen extends JFrame {
         panel.setLayout(new GridLayout(1, 3, 10, 10));
         add(panel);
 
-        ImageIcon warrior = new ImageIcon("src/assests/warrior");
-        ImageIcon wizard = new ImageIcon("wizard.png");
-        ImageIcon priest = new ImageIcon("C:\\Users\\Usuario\\Desktop\\Proyecto Juego\\RoguectioGame\\src\\assests\\priest_right");
+        ImageIcon warrior = new ImageIcon("src/assets/warrior/warrior_down.gif");
+        ImageIcon wizard = new ImageIcon("src/assets/wizard/wizard_down.gif");
+        ImageIcon priest = new ImageIcon("src/assets/priest/priest_down.gif");
 
         JLabel warriorLabel = new JLabel(warrior);
         JLabel wizardLabel = new JLabel(wizard);
