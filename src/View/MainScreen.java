@@ -274,6 +274,32 @@ public class MainScreen extends JFrame {
         }
     }
 
+    private void loadHighScore() {
+        try {
+            File file = new File(RECORD_FILE);
+            if (file.exists()) {
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                String line = reader.readLine();
+                if (line != null) {
+                    highScore = Integer.parseInt(line.trim());
+                }
+                reader.close();
+            }
+        } catch (Exception e) {
+            System.err.println("No se pudo leer el récord: " + e.getMessage());
+        }
+    }
+
+    private void saveHighScore(int newHighScore) {
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter(RECORD_FILE));
+            writer.println(newHighScore);
+            writer.close();
+        } catch (Exception e) {
+            System.err.println("No se pudo guardar el récord: " + e.getMessage());
+        }
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             MainScreen screen = new MainScreen("Warrior"); // Puedes cambiar a "wizard" o "priest"
