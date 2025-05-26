@@ -168,6 +168,8 @@ public class MainScreen extends JFrame {
         skeletons = new ArrayList<>();
         skeletons.add(new Skeleton(5 * tileSize, 3 * tileSize));
         skeletons.add(new Skeleton(15 * tileSize, 6 * tileSize));
+        skeletons.add(new Skeleton(10 * tileSize, 10 * tileSize));
+        skeletons.add(new Skeleton(30 * tileSize, 25 * tileSize));
 
         loadHighScore(); // Leer récord al inicio
 
