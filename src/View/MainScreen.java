@@ -212,7 +212,14 @@ public class MainScreen extends JFrame {
 
                     if (playerHealth <= 0) {
                         skeletonTimer.stop();
-                        JOptionPane.showMessageDialog(MainScreen.this, "Game Over! " + characterName + " died.");
+
+                        if (score > highScore) {
+                            saveHighScore(score);
+                            JOptionPane.showMessageDialog(MainScreen.this, "Game Over! " + characterName + " died.\nNuevo récord: " + score + " puntos.");
+                        } else {
+                            JOptionPane.showMessageDialog(MainScreen.this, "Game Over! " + characterName + " died.\nPuntos: " + score + "\nRécord actual: " + highScore);
+                        }
+
                         dispose();
                         return;
                     }
