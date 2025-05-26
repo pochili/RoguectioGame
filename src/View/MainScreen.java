@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -121,6 +122,10 @@ public class MainScreen extends JFrame {
     private final Coin coin;
     private final String characterName;
 
+    private int score = 0;
+    private int highScore = 0;
+    private final String RECORD_FILE = "record.txt";
+
     public MainScreen(String characterName) {
         this.characterName = characterName;
         setTitle("Game Screen - " + characterName);
@@ -164,6 +169,8 @@ public class MainScreen extends JFrame {
         skeletons.add(new Skeleton(5 * tileSize, 3 * tileSize));
         skeletons.add(new Skeleton(15 * tileSize, 6 * tileSize));
 
+        loadHighScore(); // Leer récord al inicio
+
         gamePanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -192,10 +199,11 @@ public class MainScreen extends JFrame {
                     g.drawImage(characterImage, playerX, playerY, tileSize, tileSize, this);
                 }
 
-
                 g.setColor(Color.BLACK);
                 g.setFont(new Font("Arial", Font.BOLD, 20));
                 g.drawString("Lives: " + playerHealth, 20, 40);
+                g.drawString("Puntos: " + score, 20, 70);
+                g.drawString("Récord: " + highScore, 20, 100);
             }
         };
 
@@ -243,6 +251,7 @@ public class MainScreen extends JFrame {
                 if (direction != -1) {
                     movePlayer(direction);
                     if (coin.checkCollision(playerX, playerY)) {
+                        score++;
                         coin.respawn();
                     }
                     repaint();
