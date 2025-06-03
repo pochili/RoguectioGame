@@ -8,100 +8,11 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import Constants.Constants;
+import models.Skeleton;
+import models.Coins;
+import BD.BD;
 
-class Constants {
-    public static final int LEFT = 0;
-    public static final int RIGHT = 1;
-    public static final int UP = 2;
-    public static final int DOWN = 3;
-
-    public static final int WARRIOR_SPEED = 3;
-    public static final int WIZZARD_SPEED = 7;
-    public static final int PRIEST_SPEED = 4;
-
-    public static final int WARRIOR_HEALTH = 5;
-    public static final int WIZZARD_HEALTH = 3;
-    public static final int PRIEST_HEALTH = 5;
-}
-
-class Coin {
-    private int x;
-    private int y;
-    private final int tileSize = 64;
-    private final Image coinImage;
-
-    public Coin() {
-        coinImage = new ImageIcon("src/assets/dungeon/dollar.png").getImage();
-        respawn();
-    }
-
-    public void draw(Graphics g, JPanel panel) {
-        g.drawImage(coinImage, x, y, tileSize, tileSize, panel);
-    }
-
-    public void respawn() {
-        Random rand = new Random();
-        int cols = 20;
-        int rows = 10;
-        int randomCol = rand.nextInt(cols);
-        int randomRow = rand.nextInt(rows - 2) + 1;
-
-        x = randomCol * tileSize;
-        y = randomRow * tileSize;
-    }
-
-    public boolean checkCollision(int playerX, int playerY) {
-        Rectangle playerRect = new Rectangle(playerX, playerY, tileSize, tileSize);
-        Rectangle coinRect = new Rectangle(x, y, tileSize, tileSize);
-        return playerRect.intersects(coinRect);
-    }
-}
-
-class Skeleton {
-    private int x, y;
-    private final int speed = 3;
-    private final int tileSize = 64;
-    private final Image image = new ImageIcon("src/assets/skeleton/skeleton_down.gif").getImage();
-    private int direction;
-    private final Random rand = new Random();
-
-    public Skeleton(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.direction = rand.nextInt(4);
-    }
-
-    public void draw(Graphics g, JPanel panel) {
-        g.drawImage(image, x, y, tileSize, tileSize, panel);
-    }
-
-    public void move(int panelWidth, int panelHeight) {
-        int newX = x, newY = y;
-        switch (direction) {
-            case 0 -> newX -= speed;
-            case 1 -> newX += speed;
-            case 2 -> newY -= speed;
-            case 3 -> newY += speed;
-        }
-
-        if (newX >= 0 && newX + tileSize <= panelWidth && newY >= tileSize && newY + tileSize <= panelHeight - tileSize) {
-            x = newX;
-            y = newY;
-        } else {
-            direction = rand.nextInt(4);
-        }
-
-        if (rand.nextInt(20) == 0) {
-            direction = rand.nextInt(4);
-        }
-    }
-
-    public boolean checkCollision(int playerX, int playerY) {
-        Rectangle playerRect = new Rectangle(playerX, playerY, tileSize, tileSize);
-        Rectangle skeletonRect = new Rectangle(x, y, tileSize, tileSize);
-        return playerRect.intersects(skeletonRect);
-    }
-}
 
 public class MainScreen extends JFrame {
 
@@ -119,7 +30,7 @@ public class MainScreen extends JFrame {
     private int playerSpeed;
     private int playerHealth;
 
-    private final Coin coin;
+    private final Coins coin;
     private final String characterName;
 
     private int score = 0;
@@ -163,15 +74,15 @@ public class MainScreen extends JFrame {
         playerX = tileSize;
         playerY = 5 * tileSize;
 
-        coin = new Coin();
+        coin = new Coins();
 
         skeletons = new ArrayList<>();
         skeletons.add(new Skeleton(5 * tileSize, 3 * tileSize));
         skeletons.add(new Skeleton(15 * tileSize, 6 * tileSize));
         skeletons.add(new Skeleton(10 * tileSize, 10 * tileSize));
-        skeletons.add(new Skeleton(30 * tileSize, 25 * tileSize));
+        skeletons.add(new Skeleton(16 * tileSize, 8 * tileSize));
 
-        loadHighScore(); // Leer récord al inicio
+        loadHighScore(); //
 
         gamePanel = new JPanel() {
             @Override
@@ -201,7 +112,7 @@ public class MainScreen extends JFrame {
                     g.drawImage(characterImage, playerX, playerY, tileSize, tileSize, this);
                 }
 
-                g.setColor(Color.BLACK);
+                g.setColor(Color.white);
                 g.setFont(new Font("Arial", Font.BOLD, 20));
                 g.drawString("Lives: " + playerHealth, 20, 40);
                 g.drawString("Puntos: " + score, 20, 70);
@@ -317,6 +228,14 @@ public class MainScreen extends JFrame {
             System.err.println("No se pudo guardar el récord: " + e.getMessage());
         }
     }
+
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            BD.GestorRecords.insertarNuevoRecord(score);
+            System.exit(0);
+        }
+    }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
